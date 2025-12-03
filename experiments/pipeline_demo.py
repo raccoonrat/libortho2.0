@@ -22,7 +22,7 @@ def run_v2_experiment():
     
     # 2. 训练阶段：制造纠缠
     # 注意：我们这里从头开始加载模型进行训练
-    trainer = DynamicOverfitter(model_name="meta-llama/Llama-3.2-3B")
+    trainer = DynamicOverfitter(model_name="/dfs/data/wangyh43/models/meta-llama/Llama-3.2-3B")
     model, tokenizer = trainer.setup_model()
     
     print("\n>>> Phase 1: Training (Creating Entanglement)...")
@@ -39,7 +39,9 @@ def run_v2_experiment():
     
     # 假设我们认为前 10% 的秩包含通用能力，后 90% 是死记硬背的噪声
     # 这里的 threshold 是关键超参数
-    general_sd, memory_sd = separator.separate_adapter(threshold_ratio=0.1)
+    # In pipeline_demo.py
+    # 尝试反转逻辑：假设记忆在 Top K
+    general_sd, memory_sd = separator.separate_adapter(threshold_ratio=0.1, invert_selection=True)
     
     # 4. 验证阶段：加载 General Adapter
     print("\n>>> Phase 3: Verifying General Adapter (Should Forget)...")
